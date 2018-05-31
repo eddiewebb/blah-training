@@ -6,27 +6,41 @@ jobs:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout 
-      - run: echo "Hello World"
+      - run: |
+          mkdir my_workspace
+          echo "Hello World" > my_workspace/echo-output
+      - persist_to_workspace:
+          root: my_workspace
+          paths:
+            - echo-output
       
   testa:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
-      - checkout 
-      - run: echo "Friendly hi"
+      - attach_workspace:
+          at: my_workspace
+      - run: cat my_workspace/echo-output
   testb:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
-      - checkout 
-      - run: echo "Salut"
+      - attach_workspace:
+          at: my_workspace
+      - run: |
+          if [[ $(cat my_workspace/echo-output) == "Trying out workspaces" ]]; then
+            echo "It worked!";
+          else
+            echo "Nope!"; exit 1
+          fi   
       
   deploy:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
-      - checkout 
-      - run: echo "Goodby"
+      - attach_workspace:
+          at: my_workspace
+      - run: cat my_workspace/echo-output
       
       
 workflows:  
