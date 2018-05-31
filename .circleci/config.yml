@@ -8,12 +8,25 @@ jobs:
       - checkout 
       - run: echo "Hello World"
       
-  test:
+  testa:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout 
       - run: echo "Friendly hi"
+  testb:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout 
+      - run: echo "Salut"
+      
+  deploy:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout 
+      - run: echo "Goodby"
       
       
 workflows:  
@@ -21,7 +34,14 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test:
+      - testa:
           requires:
             - build
+      - testb:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - testa
+            - testb
       
