@@ -8,6 +8,18 @@ jobs:
       - checkout 
       - run: echo "Hello World"
       
+  test:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout 
+      - run: echo "Friendly hi"
       
       
+workflows:  
+  version: 2
+  build_and_test
+    jobs:
+      - build
+      - test
       
